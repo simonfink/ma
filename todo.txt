@@ -1,0 +1,48 @@
+MA:Smartventil
+--------------
+
+STATUS UPDATES JEDEN FREITAG
+
+erste schritte:
+---------------
+
+-überblick verschaffen
+--was hat welche funktion
+--protokolle
+--...
+
+-mindmap, was alles für möglichkeiten
+--Protokolle: mqtt, http, coap,...
+--Verschlüsselung
+--Kompression
+
+
+-datenaustausch: aufstellung
+--wiki
+--git
+--svn  --bevorzugt (fabian)
+--trello --evtl dazu
+--...
+
+
+im auge behalten:
+-----------------
+-zeitsynchronisation: ntp, ptp,...
+-firewall friendly, iot security
+-zeitplan (erst ab oktober)
+-hohe datenraten -> kontinuierlich -> empfänger
+--kompression, verschlüsselung?
+
+specs:
+------
+-arm cortex m7 oder besser
+-ethernet 100 Mbit
+-negotiation feature
+-pro ventil:
+--5-20 Messgrößen
+--kHz Bereich
+--adaptives sampling? (Berücksichtigung im Protokoll)
+
+startprojekt:
+-------------
+-parser mqtt zu cratedb war zu langsam
