@@ -1,7 +1,8 @@
 MA:Smartventil
 --------------
 
-STATUS UPDATES JEDEN FREITAG
+STATUS UPDATES JEDEN FREITAG, an Urs, René, Christian, Adrian, Alejandro
+Donnerstag VAT-Tag
 
 erste schritte:
 ---------------
@@ -9,12 +10,14 @@ erste schritte:
 -überblick verschaffen
 --was hat welche funktion
 --protokolle
---...
+--Konzept automated testing (inkl. möglichkeit devices zu "sperren")
+--was kann rabbitmq? (mqtt, aqmp, stomp,..)
 
 -mindmap, was alles für möglichkeiten
 --Protokolle: mqtt, http, coap,...
 --Verschlüsselung
 --Kompression
+--automated testing
 
 
 -datenaustausch: aufstellung
@@ -24,6 +27,15 @@ erste schritte:
 --trello --evtl dazu
 --...
 
+Arbeitspakete
+-------------
+-cloud performance zu lokal
+-10Hz, 100Hz, 1kHz, 5kHz,... 
+-Welche Programmiersprache?
+-Welches Betriebssystem? (anfangs auf RPi, raspbian, rtos rpi...)(+evtl. Einfluss)
+-tests
+-tests
+-tests
 
 im auge behalten:
 -----------------
@@ -32,6 +44,8 @@ im auge behalten:
 -zeitplan (erst ab oktober)
 -hohe datenraten -> kontinuierlich -> empfänger
 --kompression, verschlüsselung?
+-remote device management (tr-069, lwm2m) (+ welche informationen bei bug, error...)
+-RPi - Zeitsynchronisation : alle melden sich um 13:55...
 
 specs:
 ------
