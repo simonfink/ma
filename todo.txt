@@ -2,7 +2,7 @@ MA:Smartventil
 --------------
 
 STATUS UPDATES JEDEN FREITAG, an Urs, René, Christian, Adrian, Alejandro
-Donnerstag VAT-Tag
+Donnerstag VAT-Tag (Änderungen vorbehalten)
 
 erste schritte:
 ---------------
@@ -14,7 +14,7 @@ erste schritte:
 --was kann rabbitmq? (mqtt, aqmp, stomp,..)
 
 -mindmap, was alles für möglichkeiten
---Protokolle: mqtt, http, coap,...
+--Protokolle: mqtt, http, coap, aqmp, stomp
 --Verschlüsselung
 --Kompression
 --automated testing
