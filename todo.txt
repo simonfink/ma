@@ -4,6 +4,12 @@ MA:Smartventil
 STATUS UPDATES JEDEN FREITAG, an Urs, René, Christian, Adrian, Alejandro
 Donnerstag VAT-Tag (Änderungen vorbehalten)
 
+fortlaufende Doku im wiki
+
+info: out of band / in band
+-wiki zugang für vat (ach, esa, mara)
+-trello einladungen an alle beteiligten
+
 erste schritte:
 ---------------
 
@@ -27,8 +33,14 @@ erste schritte:
 --trello --evtl dazu
 --...
 
+mqtt topic: nicht sub-millisec sondern timestamp*1000+submillisec
+
 Arbeitspakete
 -------------
+-Theoretische Berechnung der gesendeten Pakete (aller Protokolle) (overhead, bandbreite) (abschätzen, rechnen, testen) (analyse)
+--anschließende verifizierung durch praktisches beispiel, festhalten, ins wiki
+--excel simulator -> berechnet für alle Protokolle
+-Kriterien und Gewichtung für Protokolle^
 -cloud performance zu lokal
 -10Hz, 100Hz, 1kHz, 5kHz,... 
 -Welche Programmiersprache?
