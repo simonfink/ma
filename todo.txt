@@ -3,10 +3,9 @@ MA:Smartventil
 
 STATUS UPDATES JEDEN FREITAG, an Urs, René, Christian, Adrian, Alejandro
 Donnerstag VAT-Tag (Änderungen vorbehalten)
-
 fortlaufende Doku im wiki
 
-info: out of band / in band
+
 -wiki zugang für vat (ach, esa, mara)
 -trello einladungen an alle beteiligten
 
@@ -17,10 +16,10 @@ erste schritte:
 --was hat welche funktion
 --protokolle
 --Konzept automated testing (inkl. möglichkeit devices zu "sperren")
---was kann rabbitmq? (mqtt, aqmp, stomp,..)
+--was kann rabbitmq? (mqtt, amqp, stomp,..)
 
 -mindmap, was alles für möglichkeiten
---Protokolle: mqtt, http, coap, aqmp, stomp
+--Protokolle: mqtt, http, coap, amqp, stomp
 --Verschlüsselung
 --Kompression
 --automated testing
@@ -28,7 +27,6 @@ erste schritte:
 
 -datenaustausch: aufstellung
 --wiki
---git
 --svn  --bevorzugt (fabian)
 --trello --evtl dazu
 --...
@@ -61,9 +59,10 @@ im auge behalten:
 
 specs:
 ------
--arm cortex m7 oder besser
+-arm cortex m4(7) oder besser
 -ethernet 100 Mbit
 -negotiation feature
+-info: out of band / in band
 -pro ventil:
 --5-20 Messgrößen
 --kHz Bereich
