@@ -3,6 +3,11 @@ MA:Smartventil
 
 STATUS UPDATES JEDEN FREITAG, an Urs, René, Christian, Adrian, Alejandro
 Donnerstag VAT-Tag (Änderungen vorbehalten)
+fortlaufende Doku im wiki
+
+
+-wiki zugang für vat (ach, esa, mara)
+-trello einladungen an alle beteiligten
 
 erste schritte:
 ---------------
@@ -11,10 +16,10 @@ erste schritte:
 --was hat welche funktion
 --protokolle
 --Konzept automated testing (inkl. möglichkeit devices zu "sperren")
---was kann rabbitmq? (mqtt, aqmp, stomp,..)
+--was kann rabbitmq? (mqtt, amqp, stomp,..)
 
 -mindmap, was alles für möglichkeiten
---Protokolle: mqtt, http, coap, aqmp, stomp
+--Protokolle: mqtt, http, coap, amqp, stomp
 --Verschlüsselung
 --Kompression
 --automated testing
@@ -22,13 +27,18 @@ erste schritte:
 
 -datenaustausch: aufstellung
 --wiki
---git
 --svn  --bevorzugt (fabian)
 --trello --evtl dazu
 --...
 
+mqtt topic: nicht sub-millisec sondern timestamp*1000+submillisec
+
 Arbeitspakete
 -------------
+-Theoretische Berechnung der gesendeten Pakete (aller Protokolle) (overhead, bandbreite) (abschätzen, rechnen, testen) (analyse)
+--anschließende verifizierung durch praktisches beispiel, festhalten, ins wiki
+--excel simulator -> berechnet für alle Protokolle
+-Kriterien und Gewichtung für Protokolle^
 -cloud performance zu lokal
 -10Hz, 100Hz, 1kHz, 5kHz,... 
 -Welche Programmiersprache?
@@ -49,9 +59,10 @@ im auge behalten:
 
 specs:
 ------
--arm cortex m7 oder besser
+-arm cortex m4(7) oder besser
 -ethernet 100 Mbit
 -negotiation feature
+-info: out of band / in band
 -pro ventil:
 --5-20 Messgrößen
 --kHz Bereich
