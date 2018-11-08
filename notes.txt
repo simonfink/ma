@@ -1,0 +1,59 @@
+RabbitMQ Supports:
+MQTT
+AMQP
+STOMP
+HTTP
+
+(CoAP)
+
+Wireshark
+---------
+does not display any ethernet 1 packets, also the crc from ethernet2 is not shown (add 24 bytes to each value)
+the rj45 to usb adapter adds 2 bytes of data (VSS Monitoring) (only in response visible)
+
+MQTT
+----
+get paho.eclipse.mqtt
+in examples -> client_sub.py
+add mqttc.username_pw_set(username="xxx", password="xxx")
+connect to 172.18.252.25:1883, timeout (60) is not relevant
+subscribe to topic "test/smartvalve"
+
+HTTP
+----
+POST data to rabbitmq
+body = '{"properties":{},"routing_key":"test.smartvalve","payload":"python http post test","payload_encoding":"string"}'
+url = "/api/exchanges/%2f/amq.topic/publish" (and also 172.18.252.25:15672 -> web ui from rabbitmq), %2f is the default vhost, exchange could also be changed
+the http frame gets split by tcp -> in wireshark: after tcp handshake another tcp frame -> is currently a http frame (only header). followed by the http body. psh flag in first frame -> push: the content length of the following body get send, so that server (or client) can reserve some space for that data
+in python less overhead than in java (HttpURLConnection sends Pragma + value and Cache-Control + value, can't remove that)
+
+CoAP
+----
+external plugin available (see links)
+
+
+STOMP
+-----
+plugin already installed
+
+
+WebSockets
+----------
+
+
+
+usefull links
+https://blogs.vmware.com/vfabric/2013/02/choosing-your-messaging-protocol-amqp-mqtt-or-stomp.html
+https://packetpushers.net/tcp-over-ip-bandwidth-overhead/ (TCP Overhead)
+https://en.wikipedia.org/wiki/IP_fragmentation (IP Fragmentation)
+http://www.steves-internet-guide.com/mqtt-protocol-messages-overview/ (MQTT Messages overview)
+http://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html#_Toc398718018 (MQTT specs)
+https://de.wikipedia.org/wiki/Datenframe (Ethernet Frame)
+https://de.wikipedia.org/wiki/User_Datagram_Protocol (UDP)
+https://de.wikipedia.org/wiki/IP-Paket (IP Paket)
+https://paolopatierno.wordpress.com/2015/07/23/amqp-on-the-wire-messages-content-framing/ (AMQP on the wire)
+https://www.rabbitmq.com/resources/specs/amqp0-9-1.pdf (amqp specs)
+https://www.rabbitmq.com/mqtt.html (Rabbitmq mqtt plugin)
+https://github.com/gotthardp/rabbitmq-coap-pubsub (rabbitmq coap plugin)
+
+
