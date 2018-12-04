@@ -1,0 +1,38 @@
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+public class PostTest {
+
+	public static void main(String[] args) {
+		HttpURLConnection connection = null;
+
+		  try {
+		    //Create connection
+		    URL url = new URL("172.18.252.25:15672");
+		    connection = (HttpURLConnection) url.openConnection();
+		    connection.setRequestMethod("POST");
+		    connection.setRequestProperty("Content-Type", 
+		        "application/x-www-form-urlencoded");
+
+		    /*connection.setRequestProperty("Content-Length", 
+		        Integer.toString(urlParameters.getBytes().length));*/
+
+		    connection.setUseCaches(false);
+		    connection.setDoOutput(true);
+
+		    //Send request
+		    DataOutputStream wr = new DataOutputStream (
+		        connection.getOutputStream());
+		    //wr.writeBytes(urlParameters);
+		    wr.close();
+		  }catch(Exception e) {
+			  
+		  }
+		
+	}
+
+}

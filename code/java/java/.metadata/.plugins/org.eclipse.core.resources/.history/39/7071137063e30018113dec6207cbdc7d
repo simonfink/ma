@@ -1,0 +1,26 @@
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+public class PostTest {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		URL url;
+		HttpURLConnection con;
+		
+		try {
+			url = new URL("172.18.252.25");
+			con = (HttpURLConnection)(url.openConnection());
+			con.setRequestMethod("POST");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+}
