@@ -42,10 +42,12 @@ class ClientHandler extends Thread {
 	Socket socket;
 	DataInputStream in;
 	DataOutputStream out;
-	//PrintWriter output;
+	PrintWriter output;
 	long uniqueID;
 	static long uniqueIDCounter = 0;
 	ArrayList<V1Payload> data;
+	
+	boolean active = true;
 	
 	public ClientHandler(Socket socket) {
 		this.socket = socket;
@@ -55,7 +57,7 @@ class ClientHandler extends Thread {
 		try {
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
-			//output = new PrintWriter(socket.getOutputStream(), true);
+			output = new PrintWriter(out);
 			byte code = readCode();
 			in.readLine();
 			System.out.println("code: " + code + ", Connect: " + SFMPUtils.CONNECT);
@@ -78,9 +80,11 @@ class ClientHandler extends Thread {
 
 				//System.out.println("clientID: " + clientID);
 				if(correctUser(username, password)){
-					System.out.println("correct user");
+					//System.out.println("correct user");
+					output.println((char)SFMPUtils.CONACK);
 					sendCode(SFMPUtils.CONACK);
 					out.flush();
+					//output.flush();
 					this.start();
 				}else {
 					closeConnection();
@@ -110,13 +114,13 @@ class ClientHandler extends Thread {
 	public void run() {
 		System.out.println("running");
 		try {
-			while(true) {
+			while(active) {
 			
 				if(in.available() > 0) {
 					System.out.println("input available");
 					byte typeByte = readCode();
 					
-					System.out.println(""+typeByte);
+					System.out.println("typebyte: "+typeByte);
 					
 					switch(typeByte) {
 					case SFMPUtils.PUBLISH:
@@ -124,7 +128,7 @@ class ClientHandler extends Thread {
 						V1Payload payload = new V1Payload();
 						payload.timestamp = in.readLong();
 						System.out.println("ts: " + payload.timestamp);
-						payload.tsSubMilli = in.readInt();
+						payload.tsSubMilli = in.readShort();
 						System.out.println("tsSubMilli: " + payload.tsSubMilli);
 						payload.temp1 = in.readFloat();
 						System.out.println("temp1: " + payload.temp1);
@@ -147,6 +151,8 @@ class ClientHandler extends Thread {
 						
 						data.add(payload);
 						sendCode(SFMPUtils.PUBACK);
+						//output.println((char)SFMPUtils.PUBACK);
+						//output.flush();
 						out.flush();
 						System.out.println("published new data to: " + topic);
 						break;
@@ -155,6 +161,8 @@ class ClientHandler extends Thread {
 						sendCode(SFMPUtils.DISCONACK);
 						out.flush();
 						socket.close();
+						socket = null;
+						active = false;
 						break;
 					}
 				}
@@ -166,8 +174,10 @@ class ClientHandler extends Thread {
 			e1.printStackTrace();
 		}finally {
 			try {
-				System.out.println("disconnecting");
-				this.socket.close();
+				if(socket != null) {
+					System.out.println("disconnecting");
+					this.socket.close();
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -2,7 +2,7 @@ package Server;
 
 public class V1Payload {
 	public long timestamp;
-	public int tsSubMilli;
+	public short tsSubMilli;
 	public float temp1;
 	public float temp2;
 	public float accx;
