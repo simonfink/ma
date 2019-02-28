@@ -1,0 +1,16 @@
+clientID: unique id of the vdaq
+
+will: publishes the last will of the device, if the connection gets lost (or closed)
+QoS: Quality of Service: 0 (fire & forget), 1 (ACK), 2 (Send exactly once, 3xACK)
+
+
+
+The Internet Protocol requires that hosts must be able to process IP datagrams of at least 576 bytes (for IPv4) or 1280 bytes (for IPv6) --> traceroute --mtu 172.18.252.25 --> F=1500 (bytes, IP)
+
+he MSS (maximum segment size, TCP) is equal to the difference, either 536 or 1460 bytes.
+
+https://www.quora.com/What-is-the-difference-between-fragmentation-and-segmentation-of-packet
+
+https://lifehacker.com/how-to-control-a-raspberry-pi-remotely-from-anywhere-in-1792892937
+
+TCP segmentiert anhand der vorhandenen MTU.

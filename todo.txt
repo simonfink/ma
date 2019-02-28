@@ -12,20 +12,20 @@ fortlaufende Doku im wiki
 erste schritte:
 ---------------
 
--überblick verschaffen
+-überblick verschaffen	-- done
 --was hat welche funktion
 --protokolle
 --Konzept automated testing (inkl. möglichkeit devices zu "sperren")
 --was kann rabbitmq? (mqtt, amqp, stomp,..)
 
--mindmap, was alles für möglichkeiten
+-mindmap, was alles für möglichkeiten	-- done
 --Protokolle: mqtt, http, coap, amqp, stomp
 --Verschlüsselung
 --Kompression
 --automated testing
 
 
--datenaustausch: aufstellung
+-datenaustausch: aufstellung		-- done
 --wiki
 --svn  --bevorzugt (fabian)
 --trello --evtl dazu

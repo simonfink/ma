@@ -63,3 +63,7 @@ https://github.com/gotthardp/rabbitmq-coap-pubsub (rabbitmq coap plugin)
 https://computingforgeeks.com/how-to-install-latest-rabbitmq-server-on-ubuntu-18-04-lts/
 
 
+apache tomcat v9
+https://www.digitalocean.com/community/tutorials/install-tomcat-9-ubuntu-1804
+https://marcin-chwedczuk.github.io/using-tomcat-8.5-with-eclipse-neon
+
