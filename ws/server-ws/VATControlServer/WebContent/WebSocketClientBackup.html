@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>VAT Remote MGMT</title>
+	<link rel="stylesheet" href="https://cdn.metroui.org.ua/v4/css/metro-all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="styles.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+</head>
+<body>
+<div id="btnContainer">
+	<button class="headerbtn" onclick="remoteMGMT()"><i class="fa fa-bars"></i>Remote management</button>
+	<button class="headerbtn" onclick="gotoTestArea()"><i class="fa fa-th-large"></i>Test area</button>
+	<button class="headerbtn" onclick="fileUpload()"><i class="fa fa-file"></i>Upload File</button>
+</div>
+<br>
+<textarea id="debug"></textarea>
+<br>
+<div class="wrap">
+    <div class="floatleft" id="foo"></div>
+    <div class="floatright" id="bar"></div>
+    <div style="clear: both;"></div>
+</div>
+<br>
+    <!-- <video id="test_video" controls autoplay width="640">
+    	<source src="rtsp://172.18.252.46:554/s0" type="application/x-rtsp">
+	</video>-->
+    <br>
+
+    <script type="text/javascript">
+        var webSocket = new WebSocket("ws://127.0.0.1:8080/VATControlServer/websocketendpoint/"+getQueryVariable("user"));
+        var message = document.getElementById("message");
+        
+        var users = [];
+        var vdaqs = [];
+        
+        var currentState = 0;
+        
+        var DEBUG = "DEBUG\n";
+        document.getElementById("debug").value = DEBUG;
+        
+        webSocket.onopen = function(message){ wsOpen(message);};
+        webSocket.onmessage = function(message){ wsGetMessage(message);};
+        webSocket.onclose = function(message){ wsClose(message);};
+        webSocket.onerror = function(message){ wsError(message);};
+        
+        function remoteMGMT(){
+        	currentState = 0;
+        	generateVDAQTable(vdaqs);
+        	if(webSocket.readyState == webSocket.OPEN){
+        		webSocket.send(getQueryVariable("user")+":remoteMGMT");
+        	}
+        }
+        
+        function gotoTestArea(){
+        	currentState = 1;
+			var foo = document.getElementById("foo");
+        	
+        	webSocket.send(getQueryVariable("user")+":testArea");
+        	
+        	
+        	foo.innerHTML = "";
+        	
+        	var fileList = document.createElement("div");
+        	fileList.setAttribute("id", "filelist");
+        	
+        	foo.appendChild(fileList);
+        	
+        	
+        	getFiles("testarea", null);
+        	
+       	}
+        
+        function fileUpload(){
+        	currentState = 2;
+        	webSocket.send(getQueryVariable("user")+":fileUpload");
+        	
+        	var foo = document.getElementById("foo");
+        	foo.innerHTML = "";
+        	
+        	var header = document.createElement("h2");
+        	header.innerHTML = "File upload";
+        	
+        	foo.appendChild(header);
+        	
+        	var fileForm = document.createElement("form");
+        	fileForm.setAttribute("id", "sampleUploadFrm");
+        	fileForm.setAttribute("method", "POST");
+        	fileForm.setAttribute("action", "#");
+        	fileForm.setAttribute("enctype", "multipart/form-data");
+        	
+        	var formGroup = document.createElement("div");
+        	formGroup.setAttribute("class", "form-group");
+        	
+        	var inputGroup = document.createElement("div");
+        	inputGroup.setAttribute("class", "input-group input-file");
+        	inputGroup.setAttribute("name", "file")
+        	
+        	var inputSpan = document.createElement("span");
+        	inputSpan.setAttribute("class", "input-groupt-btn");
+        	
+        	var inputButton = document.createElement("button");
+        	inputButton.setAttribute("class", "btn btn-default btn-choose");
+        	inputButton.setAttribute("type", "button");
+        	inputButton.innerHTML = "Choose";
+        	
+        	inputSpan.appendChild(inputButton);
+        	
+        	var textField = document.createElement("input");
+        	textField.setAttribute("type", "text");
+        	textField.setAttribute("class", "form-control");
+        	textField.setAttribute("placeholder", "Choose a file...");
+        	
+        	var inputSpan2 = document.createElement("span");
+        	inputSpan2.setAttribute("class", "input-group-btn");
+        	
+        	var resetButton = document.createElement("button");
+        	resetButton.setAttribute("class", "btn btn-warning btn-reset");
+        	resetButton.setAttribute("type", "button");
+        	resetButton.innerHTML = "Reset";
+        	
+        	inputSpan2.appendChild(resetButton);
+        	
+        	inputGroup.appendChild(inputSpan);
+        	inputGroup.appendChild(textField);
+        	inputGroup.appendChild(inputSpan2);
+        	
+        	formGroup.appendChild(inputGroup);
+        	
+        	var inputDiv = document.createElement("div");
+        	inputDiv.setAttribute("class", "form-group");
+        	
+        	var uploadButton = document.createElement("button");
+        	uploadButton.setAttribute("type", "button");
+        	uploadButton.setAttribute("class", "btn btn-primary");
+        	uploadButton.setAttribute("id", "uploadBtn");
+        	uploadButton.innerHTML = "Submit";
+        	
+        	var resetButton2 = document.createElement("button");
+        	resetButton2.setAttribute("type", "reset");
+        	resetButton2.setAttribute("class", "btn btn-danger");
+        	resetButton2.innerHTML = "Reset";
+        	
+        	inputDiv.appendChild(uploadButton);
+        	inputDiv.appendChild(resetButton2);
+        	
+        	fileForm.appendChild(formGroup);
+        	fileForm.appendChild(inputDiv);
+        	
+        	foo.appendChild(fileForm);
+        	
+        	var fileListHeader = document.createElement("h3");
+        	fileListHeader.innerHTML = "Files on server:";
+        	
+        	foo.appendChild(fileListHeader);
+        	
+        	var fileList = document.createElement("div");
+        	fileList.setAttribute("id", "filelist");
+        	
+        	foo.appendChild(fileList);
+        	
+        	$(document).ready(function() {
+                function bs_input_file() {
+                    $(".input-file").before(
+                        function() {
+                            if ( ! $(this).prev().hasClass('input-ghost') ) {
+                                var element = $("<input type='file' class='input-ghost' style='visibility:hidden; height:0'>");
+                                element.attr("name",$(this).attr("name"));
+                                element.change(function(){
+                                    element.next(element).find('input').val((element.val()).split('\\').pop());
+                                });
+                                $(this).find("button.btn-choose").click(function(){
+                                    element.click();
+                                });
+                                $(this).find("button.btn-reset").click(function(){
+                                    element.val(null);
+                                    $(this).parents(".input-file").find('input').val('');
+                                });
+                                $(this).find('input').css("cursor","pointer");
+                                $(this).find('input').mousedown(function() {
+                                    $(this).parents('.input-file').prev().click();
+                                    return false;
+                                });
+                                return element;
+                            }
+                        }
+                    );
+                }
+                 
+                bs_input_file();
+                getFiles("fileupload",null);
+                 
+                $("#uploadBtn").on("click", function() {
+                    var url = "FileUploadServlet";
+                    var form = $("#sampleUploadFrm")[0];
+                    var data = new FormData(form);
+                    $.ajax({
+                        type : "POST",
+                        encType : "multipart/form-data",
+                        url : url,
+                        cache : false,
+                        processData : false,
+                        contentType : false,
+                        data : data,
+                        success : function(msg) {
+                            var response = JSON.parse(msg);
+                            var status = response.status;
+                            if (status == 1) {
+                                getFiles("fileupload",null);
+                            } else {
+                                alert("Couldn't upload file");
+                            }
+                        },
+                        error : function(msg) {
+                            alert("Couldn't upload file");
+                        }
+                    });
+                });
+            });
+        }
+        
+        function getFiles(state, deleteFile){
+        	var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    var data = xhr.responseText;
+                    var filelist = document.getElementById("filelist");
+                    filelist.innerHTML = data;
+                }
+            }
+            xhr.open('GET', 'FileUploadServlet', true);
+            xhr.setRequestHeader("file", deleteFile);
+            xhr.setRequestHeader("state", state);
+            xhr.send(null);	
+        }            
+        
+        function wsOpen(message){
+            generateUserTable(users);
+        }
+        function wsSendMessage(){
+            webSocket.send(message.value);
+        }
+        function wsCloseConnection(){
+            webSocket.close();
+        }
+        function wsGetMessage(message){
+        	var obj = JSON.parse(message.data);
+        	if(obj.user){
+        		checkNames(obj.user);
+        	}
+        	else if(obj.vdaq){
+        		checkVDAQs(obj);
+        	}
+        }
+        function wsClose(message){
+            //echoText.value += "Disconnect ... \n";
+        }
+ 
+        function wserror(message){
+            //echoText.value += "Error ... \n";
+        }
+        
+        function checkNames(user){
+        	if(user.remove){
+    			for(var i = 0; i < users.length; i++){
+        			if(users[i].name == user.name){
+        				users.splice(i,1);		// remove disconnected user from list
+        			}
+        		}
+    		}
+        	else if(user.name && user.ipAddr){
+        		if(users.length == 0) {
+        			users.push(user);
+        		}
+        		for(var i = 0; i < users.length; i++){
+            		if(users[i].name != user.name) {
+            			users.push(user);		// add new user to list
+            		}
+            	}
+        	}
+        	generateUserTable(users);
+        }
+        
+        function checkVDAQs(vdaq){
+        	if(vdaq.name  && vdaq.ipAddr){
+        		if(vdaqs.length == 0) {
+        			DEBUG+="vdaqs length = 0\n";
+        			vdaqs.push(vdaq);
+        			generateVDAQTable(vdaqs);
+        		}else{
+        			var newVdaq = true;
+	        		for(var i = 0; i < vdaqs.length; i++){
+	            		if(vdaqs[i].name === vdaq.name) {
+	            			DEBUG+="VDAQ already registered\n";
+	            			newVdaq = false;
+	            		}
+	            	}
+	        		if(newVdaq){
+	        			DEBUG+="put new vdaq in list\n";
+	        			vdaqs.push(vdaq);		// add new vdaq to list
+	        			generateVDAQTable(vdaqs);
+	        		}
+        		}
+        	}
+        	if(vdaq.name && vdaq.ipAddr && vdaq.cpu){
+        		DEBUG+="update cpu\n"
+    			document.getElementById("cpu"+vdaq.name).innerHTML = vdaq.cpu;
+       		}
+        	if(vdaq.remove){
+        		DEBUG+="removing vdaq\n";
+    			for(var i = 0; i < vdaqs.length; i++){
+        			if(vdaqs[i].name === vdaq.name){
+        				vdaqs.splice(i,1);		// remove disconnected vdaq from list
+        			}
+        		}
+    			generateVDAQTable(vdaqs);
+    		}
+        	
+        	document.getElementById("debug").value = DEBUG;
+       	}
+        
+        function getQueryVariable(variable)
+        {
+               var query = window.location.search.substring(1);
+               var vars = query.split("&");
+               for (var i=0;i<vars.length;i++) {
+                       var pair = vars[i].split("=");
+                       if(pair[0] == variable){return pair[1];}
+               }
+               return(false);
+        }
+        
+        function generateVDAQTable(array){
+        	if(currentState == 0){
+	        	document.getElementById('foo').innerHTML = "";
+	        	var table = document.createElement("table");
+	          	table.style.width = '95%';
+	          	table.setAttribute('border', '1');
+	        	var infoRow = document.createElement("tr");
+	        	var header = document.createTextNode("VDAQs registered:");
+	        	infoRow.appendChild(header);
+	        	table.appendChild(infoRow);
+	        	
+	        	if(array.length > 0){
+	        		var descriptionRow = document.createElement("tr");
+	            	var tddescName = document.createElement("td");
+	            	var descName = document.createTextNode("VDAQ name");
+	            	tddescName.appendChild(descName);
+	            	var tddescIp = document.createElement("td");
+	            	var descIp = document.createTextNode("IP");
+	            	tddescIp.appendChild(descIp);
+	            	var tddescCPU = document.createElement("td");
+	            	var descCPU = document.createTextNode("CPU");
+	            	tddescCPU.appendChild(descCPU);
+	            	descriptionRow.appendChild(tddescName);
+	            	descriptionRow.appendChild(tddescIp);
+	            	descriptionRow.appendChild(tddescCPU);
+	            	table.appendChild(descriptionRow);
+		          	for(var i = 0; i < array.length; i++){
+		          		var row = document.createElement('tr');
+		           		var tdName = document.createElement('td');
+		           		var name = document.createTextNode(array[i].name);
+		           		tdName.appendChild(name);
+		           		var tdip = document.createElement('td');
+		           		var ip = document.createTextNode(array[i].ipAddr);
+		           		tdip.appendChild(ip);
+		           		var tdcpu = document.createElement('td');
+		           		var cpu = document.createTextNode(array[i].cpu);
+		           		tdcpu.setAttribute('id', "cpu"+array[i].name);
+		           		//tdcpu.setAttribute('onclick', "testOnClick()");
+		           		row.setAttribute('id', "row"+array[i].name);
+		           		row.setAttribute('class', i%2?'odd':'even');
+		           		tdcpu.appendChild(cpu);
+		           		row.appendChild(tdName);
+		           		row.appendChild(tdip);
+		           		row.appendChild(tdcpu);
+		            	table.appendChild(row);
+		          	}
+	        	}else{
+	        		var row = document.createElement('tr');
+	        		var info = document.createTextNode("No VDAQs registered");
+	        		row.appendChild(info);
+	        		table.appendChild(row);
+	        	}
+	          	document.getElementById('foo').appendChild(table);
+        	}
+        }  
+        
+        function generateUserTable(array){
+        	document.getElementById('bar').innerHTML = "";
+        	var table = document.createElement("table");
+        	var infoRow = document.createElement("tr");
+        	var header = document.createTextNode("Users online:");
+        	infoRow.appendChild(header);
+        	table.appendChild(infoRow);
+        	var yourow = document.createElement('tr');
+          	var youtd = document.createElement('th');
+          	var youinfo = document.createTextNode(getQueryVariable("user"));
+          	youtd.appendChild(youinfo);
+          	yourow.appendChild(youtd);
+          	table.appendChild(youinfo);
+          	table.style.width = '100%';
+          	if(array.length > 0){
+	          	//echoText.value += array[0].name + "\n";
+	          	for(var i = 0; i < array.length; i++){
+	        		var row = document.createElement('tr');
+	              	var td = document.createElement('td');
+	              	var info = document.createTextNode(array[i].name+"/"+array[i].ipAddr);
+	              	td.appendChild(info);
+	              	row.appendChild(td);
+	              	table.appendChild(row);
+	          	}
+          	}
+          	document.getElementById('bar').appendChild(table);
+        }
+        
+        remoteMGMT();
+    </script>
+    <br>
+</body>
+</html>

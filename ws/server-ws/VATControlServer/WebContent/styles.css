@@ -1,0 +1,109 @@
+@charset "UTF-8";
+.wrap {
+    width: 100%;
+}
+
+.column {
+	float: left;
+	width: 33.33%;
+	padding: 10px;
+}
+
+.floatleft {
+    float:left; 
+    width: 60%;
+    background-color: #fff;
+}
+
+.floatright {
+float: right;
+    background-color: #ccc;
+    width: 20%;
+}
+
+.filelist {
+	display: inline-block;
+}
+
+.removeButton {
+	float: right;
+}
+
+form{
+	margin: 0 auto;
+	width: 100%;
+	text-align: center;
+}
+
+/* Style the buttons */
+.headerbtn {
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.headerbtn:hover {
+  background-color: #ddd;
+}
+
+.headerbtn.active {
+  background-color: #666;
+  color: white;
+}
+
+.odd {
+	background-color: #ccc;
+}
+
+.even {
+	background-color: #eee;
+}
+
+/* Style the form - display items horizontally */
+.form-inline { 
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
+/* Add some margins for each label */
+.form-inline label {
+  margin: 5px 10px 5px 0;
+}
+
+/* Style the remove button */
+.form-inline button {
+  padding: 10px 20px;
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  color: white;
+}
+
+.form-inline button:hover {
+  background-color: royalblue;
+}
+
+.removeButton{
+	padding: 10px 20px;
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  color: white;
+}
+
+.removeButton:hover{
+  background-color: royalblue;
+}
+
+/* Add responsiveness - display the form controls vertically instead of horizontally on screens that are less than 800px wide */
+@media (max-width: 800px) {
+  .form-inline input {
+    margin: 10px 0;
+  }
+
+  .form-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Upload Files</title>
+  </head>
+
+  <body>
+    <form action = "FileUploadServlet" method = "post" enctype = "multipart/form-data">
+         <input type = "file" name = "file" size = "50" />
+         <input type = "submit" value = "Upload File" />
+      </form>
+    <br>
+    <h2>Files on server:</h2>
+    <div id="filelist"/>
+    
+    <script>
+    function getFiles(){
+    	var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                var data = xhr.responseText;
+                var filelist = document.getElementById("filelist");
+                filelist.innerHTML = data;
+            }
+        }
+        xhr.open('GET', 'FileUploadServlet', true);
+        xhr.send(null);	
+    }    
+    getFiles();
+    </script>
+
+  </body>
+</html>
